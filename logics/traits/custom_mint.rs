@@ -14,7 +14,7 @@ use openbrush::{
 };
 
 #[openbrush::wrapper]
-pub type TokenRef = dyn CustomMint;
+pub type CustomMintRef = dyn CustomMint;
 
 #[openbrush::trait_definition]
 pub trait CustomMint {
