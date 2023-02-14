@@ -5,19 +5,31 @@ use openbrush::{
         AccountId,
         Balance,
         String,
+        ZERO_ADDRESS,
     },
 };
 pub const STORAGE_KEY: u32 = openbrush::storage_unique_key!(Data);
 
 pub type TokenId = Id;
 
-#[derive(Default, Debug)]
+#[derive(Debug)]
 #[openbrush::upgradeable_storage(STORAGE_KEY)]
 pub struct Data {
     pub last_token_id: u64,
     pub royalty: Mapping<TokenId,u16>,
     pub creator: AccountId,
     pub token_uri: Mapping<TokenId,String>,
+}
+
+impl Default for Data {
+    fn default() -> Self {
+        Self {
+            last_token_id: 0,
+            royalty: Default::default(),
+            creator: ZERO_ADDRESS.into(),
+            token_uri: Default::default(),
+        }
+    }
 }
 
 #[derive(Debug, PartialEq, Eq, scale::Encode, scale::Decode)]

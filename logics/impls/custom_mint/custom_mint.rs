@@ -1,4 +1,4 @@
-use ink_prelude::string::{
+use ink::prelude::string::{
     String as PreludeString,
     ToString,
 };

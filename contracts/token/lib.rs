@@ -11,15 +11,13 @@ pub mod token {
 	use openbrush::contracts::psp34::extensions::enumerable::*;
 	use openbrush::contracts::psp34::extensions::metadata::*;
 
-	use ink_storage::traits::SpreadAllocate;
-
 	use custom_mint_pkg::{
 		traits::custom_mint::*,
 		impls::custom_mint::*,
 	};
 
     #[ink(storage)]
-    #[derive(Default, Storage,SpreadAllocate)]
+    #[derive(Default, Storage)]
     pub struct Token {
     	#[storage_field]
 		psp34: psp34::Data<Balances>,
@@ -45,7 +43,7 @@ pub mod token {
 			symbol: String,
 			base_uri: String,
 		) -> Self {
-			ink_lang::codegen::initialize_contract(|instance: &mut Token|{
+				let mut instance = Self::default();
 				instance._init_with_owner(instance.env().caller());
 				let collection_id = instance.collection_id();
 				instance._set_attribute(collection_id.clone(), String::from("name"), name);
@@ -53,7 +51,7 @@ pub mod token {
 				instance._set_attribute(collection_id, String::from("baseUri"), base_uri);
 				instance.custom_mint.last_token_id = 0;
 				instance.custom_mint.creator = instance.env().caller();
-			})
+				instance
 		}
 
     }
@@ -62,9 +60,8 @@ pub mod token {
 	mod tests {
 		use super::*;
         use crate::token::PSP34Error::*;
-        use ink_env::test;
-        use ink_lang as ink;
-		use ink_prelude::string::String as PreludeString;
+        use ink::env::test;
+		use ink::prelude::string::String as PreludeString;
 
 		#[ink::test]
 		fn new_works() {
@@ -114,16 +111,16 @@ pub mod token {
 			assert_eq!(contract.get_royalty_info(Id::U64(1),sales_price),Ok((royalties,accounts.alice)));
 		}
 
-		fn default_accounts() -> test::DefaultAccounts<ink_env::DefaultEnvironment> {
+		fn default_accounts() -> test::DefaultAccounts<ink::env::DefaultEnvironment> {
             test::default_accounts::<Environment>()
         }
 
         fn set_sender(sender: AccountId) {
-            ink_env::test::set_caller::<Environment>(sender);
+            ink::env::test::set_caller::<Environment>(sender);
         }
 
         fn set_balance(account_id: AccountId, balance: Balance) {
-            ink_env::test::set_account_balance::<ink_env::DefaultEnvironment>(account_id, balance)
+            ink::env::test::set_account_balance::<ink::env::DefaultEnvironment>(account_id, balance)
         }
 	}
 }

@@ -5,17 +5,12 @@ edition = "2021"
 authors = [""]
 
 [dependencies]
-ink_primitives = { version = "3.4.0", default-features = false }
-ink_metadata = { version = "3.4.0", default-features = false, features = ["derive"], optional = true }
-ink_env = { version = "3.4.0", default-features = false }
-ink_storage = { version = "3.4.0", default-features = false }
-ink_lang = { version = "3.4.0", default-features = false }
-ink_prelude = { version = "3.4.0", default-features = false }
+ink = { version = "4.0.0-beta.1", default-features = false }
 
 scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
 scale-info = { version = "2", default-features = false, features = ["derive"], optional = true }
 
-openbrush = { tag = "v2.3.0", git = "https://github.com/Supercolony-net/openbrush-contracts", default-features = false, features = ["ownable", "psp34"] }
+openbrush = { git = "https://github.com/727-Ventures/openbrush-contracts", version = "3.0.0-beta.1", default-features = false, features = ["ownable", "psp34", "reentrancy_guard"] }
 
 custom_mint_pkg = { path = "../../logics", default-features = false }
 
@@ -30,12 +25,7 @@ crate-type = [
 [features]
 default = ["std"]
 std = [
-    "ink_primitives/std",
-    "ink_metadata",
-    "ink_metadata/std",
-    "ink_env/std",
-    "ink_storage/std",
-    "ink_lang/std",
+    "ink/std",
     "scale/std",
     "scale-info",
     "scale-info/std",
@@ -43,4 +33,10 @@ std = [
     "openbrush/std",
     "custom_mint_pkg/std",
 ]
-ink-as-dependency = [] 
+ink-as-dependency = []
+
+[profile.dev]
+overflow-checks = false
+
+[profile.release]
+overflow-checks = false
