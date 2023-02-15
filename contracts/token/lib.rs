@@ -59,7 +59,6 @@ pub mod token {
 	#[cfg(test)]
 	mod tests {
 		use super::*;
-        use crate::token::PSP34Error::*;
         use ink::env::test;
 		use ink::prelude::string::String as PreludeString;
 
@@ -81,7 +80,6 @@ pub mod token {
 		#[ink::test]
 		fn mint_works() {
 			let mut contract = Token::new(String::from("Test"),String::from("TST"),String::from("https://ipfs/1"));
-			let collection_id = contract.collection_id();
 
 			let accounts = default_accounts();
 
@@ -92,11 +90,9 @@ pub mod token {
 			assert_eq!(contract.total_supply(), 0);
 
 			let token_uri = String::from("Token1");
-			let royalty = 100;// 1%
-            let sales_price = 100;
-            let royalties = 1;
+            
 
-			assert!(contract.mint(accounts.bob,token_uri,royalty).is_ok());
+			assert!(contract.mint(accounts.bob,token_uri,accounts.eve).is_ok());
 
 			assert_eq!(contract.total_supply(), 1);
 
@@ -107,8 +103,8 @@ pub mod token {
 			assert_eq!(contract.owners_token_by_index(accounts.bob, 0), Ok(Id::U64(1)));
             assert_eq!(contract.custom_mint.last_token_id, 1);
 			assert_eq!(contract.get_token_uri(Id::U64(1)),Ok(PreludeString::from("Token1")));
-			assert_eq!(contract.get_token_royalty(Id::U64(1)),Ok(royalty));
-			assert_eq!(contract.get_royalty_info(Id::U64(1),sales_price),Ok((royalties,accounts.alice)));
+			assert_eq!(contract.allowance(accounts.bob, accounts.alice, Some(Id::U64(1))), false);
+			assert_eq!(contract.allowance(accounts.bob, accounts.eve, Some(Id::U64(1))), true);
 		}
 
 		fn default_accounts() -> test::DefaultAccounts<ink::env::DefaultEnvironment> {
@@ -119,8 +115,5 @@ pub mod token {
             ink::env::test::set_caller::<Environment>(sender);
         }
 
-        fn set_balance(account_id: AccountId, balance: Balance) {
-            ink::env::test::set_account_balance::<ink::env::DefaultEnvironment>(account_id, balance)
-        }
 	}
 }
