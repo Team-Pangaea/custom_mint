@@ -4,7 +4,6 @@ use openbrush::{
     contracts::{
         psp34::Id,
         psp34::PSP34Error,
-        psp34::extensions::enumerable::*
     },
     traits::{
         AccountId,

@@ -1,6 +1,5 @@
 use ink::prelude::string::{
     String as PreludeString,
-    ToString,
 };
 
 use crate::impls::custom_mint::types::{

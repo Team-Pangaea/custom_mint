@@ -3,7 +3,6 @@ use openbrush::{
     contracts::psp34::Id,
     traits::{
         AccountId,
-        Balance,
         String,
         ZERO_ADDRESS,
     },
