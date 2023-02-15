@@ -59,6 +59,7 @@ pub mod token {
 	#[cfg(test)]
 	mod tests {
 		use super::*;
+        use crate::token::PSP34Error::*;
         use ink::env::test;
 		use ink::prelude::string::String as PreludeString;
 
@@ -80,7 +81,7 @@ pub mod token {
 		#[ink::test]
 		fn mint_works() {
 			let mut contract = Token::new(String::from("Test"),String::from("TST"),String::from("https://ipfs/1"));
-			//let collection_id = contract.collection_id();
+			let collection_id = contract.collection_id();
 
 			let accounts = default_accounts();
 
@@ -118,8 +119,8 @@ pub mod token {
             ink::env::test::set_caller::<Environment>(sender);
         }
 
-        //fn set_balance(account_id: AccountId, balance: Balance) {
-        //    ink::env::test::set_account_balance::<ink::env::DefaultEnvironment>(account_id, balance)
-        //}
+        fn set_balance(account_id: AccountId, balance: Balance) {
+            ink::env::test::set_account_balance::<ink::env::DefaultEnvironment>(account_id, balance)
+        }
 	}
 }
